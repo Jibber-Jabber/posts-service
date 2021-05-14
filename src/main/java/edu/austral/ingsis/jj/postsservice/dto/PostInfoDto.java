@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -18,6 +17,8 @@ public class PostInfoDto {
 
     @NotNull
     private String content;
+
+    private String postId;
 
     private UserDto user;
 
@@ -30,6 +31,7 @@ public class PostInfoDto {
     public static PostInfoDto from(Post post) {
         return PostInfoDto.builder()
                 .content(post.getContent())
+                .postId(post.getId())
                 .user(new UserDto(post.getUsername()))
                 .creationDate(post.getCreationDate())
                 .likeCount(0)
