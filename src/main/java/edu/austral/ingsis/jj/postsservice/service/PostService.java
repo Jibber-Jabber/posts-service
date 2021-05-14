@@ -8,6 +8,7 @@ import edu.austral.ingsis.jj.postsservice.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,7 +25,7 @@ public class PostService {
     }
 
     public List<PostInfoDto> getAllPosts(){
-        return postRepository.findAll().stream().map(PostInfoDto::from).collect(Collectors.toList());
+        return postRepository.findAll().stream().sorted(Comparator.comparing(Post::getCreationDate).reversed()).map(PostInfoDto::from).collect(Collectors.toList());
     }
 
     public PostInfoDto createPost(PostCreationDto postCreationDto) {

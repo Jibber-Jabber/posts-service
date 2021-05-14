@@ -11,6 +11,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/posts")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class PostController {
 
     private final PostService postService;
