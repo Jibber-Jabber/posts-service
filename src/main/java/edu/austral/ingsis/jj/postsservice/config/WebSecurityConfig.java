@@ -32,17 +32,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-//        CookieCsrfTokenRepository repository = new CookieCsrfTokenRepository();
-//        repository.setCookieHttpOnly(true);
-//        repository.setSecure(true);
 
         http
-//                .csrf().csrfTokenRepository(repository).and()
-                .csrf().disable().cors().disable()
+                .csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-//                .authorizeRequests().antMatchers("/auth/*").permitAll()
-//                .anyRequest().authenticated()
                 .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
                 .headers().xssProtection().and().contentSecurityPolicy("script-src 'self'");
 
