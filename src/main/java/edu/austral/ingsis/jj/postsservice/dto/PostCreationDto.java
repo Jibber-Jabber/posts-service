@@ -16,7 +16,4 @@ public class PostCreationDto {
     @NotNull
     private String content;
 
-    @NotNull
-    private String username;
-
 }

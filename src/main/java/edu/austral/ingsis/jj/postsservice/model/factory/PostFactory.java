@@ -2,6 +2,7 @@ package edu.austral.ingsis.jj.postsservice.model.factory;
 
 import edu.austral.ingsis.jj.postsservice.dto.PostCreationDto;
 import edu.austral.ingsis.jj.postsservice.model.Post;
+import edu.austral.ingsis.jj.postsservice.model.UserInfo;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -9,9 +10,9 @@ import java.time.LocalDateTime;
 @Component
 public class PostFactory {
 
-    public Post convert(PostCreationDto postCreationDto) {
+    public Post convert(PostCreationDto postCreationDto, UserInfo userInfo) {
         Post post = new Post();
-        post.setUsername(postCreationDto.getUsername());
+        post.setUserId(userInfo.getUserId());
         post.setContent(postCreationDto.getContent());
         post.setCreationDate(LocalDateTime.now());
         return post;

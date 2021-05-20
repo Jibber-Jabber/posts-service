@@ -1,6 +1,7 @@
 package edu.austral.ingsis.jj.postsservice.dto;
 
 import edu.austral.ingsis.jj.postsservice.model.Post;
+import edu.austral.ingsis.jj.postsservice.model.UserInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,11 +29,11 @@ public class PostInfoDto {
 
     private int commentCount;
 
-    public static PostInfoDto from(Post post) {
+    public static PostInfoDto from(Post post, UserInfo userInfo) {
         return PostInfoDto.builder()
                 .content(post.getContent())
                 .postId(post.getId())
-                .user(new UserDto(post.getUsername()))
+                .user(new UserDto(userInfo.getUsername()))
                 .creationDate(post.getCreationDate())
                 .likeCount(0)
                 .commentCount(0)
