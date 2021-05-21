@@ -2,17 +2,12 @@ package edu.austral.ingsis.jj.postsservice.config;
 
 import edu.austral.ingsis.jj.postsservice.exceptions.BadRequestException;
 import edu.austral.ingsis.jj.postsservice.model.UserInfo;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,8 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.*;
 import java.util.*;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 
 
 public class AuthTokenFilter extends OncePerRequestFilter {
@@ -57,7 +50,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private UserInfo sendUserServiceRequest(String jwt) throws MalformedURLException, ProtocolException, java.io.IOException, URISyntaxException {
+    private UserInfo sendUserServiceRequest(String jwt) throws URISyntaxException {
         RestTemplate restTemplate = new RestTemplate();
 
         final String getUserUrl = "http://" + authHost + ":" + authPort + "/api/posts/authenticateUser";

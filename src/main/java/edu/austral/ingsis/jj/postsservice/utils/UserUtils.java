@@ -1,6 +1,5 @@
 package edu.austral.ingsis.jj.postsservice.utils;
 
-import edu.austral.ingsis.jj.postsservice.config.AuthEntryPoint;
 import edu.austral.ingsis.jj.postsservice.exceptions.BadRequestException;
 import edu.austral.ingsis.jj.postsservice.model.UserInfo;
 import org.slf4j.Logger;
@@ -26,7 +25,7 @@ public class UserUtils {
     @Value("${AUTH_PORT}")
     private String authPort;
 
-    private static final Logger logger = LoggerFactory.getLogger(AuthEntryPoint.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserUtils.class);
 
 
     public UserInfo getTokenUserInformation() {
@@ -38,7 +37,7 @@ public class UserUtils {
 
 
         final String getUserUrl = "http://" + authHost + ":" + authPort + "/api/posts/userInfo";
-        logger.info("Authenticating with: http://" + authHost + ":" + authPort + "/api/posts/userInfo");
+        logger.info("Authenticating with: http://{}:{}/api/posts/userInfo", authHost, authPort);
         URI getUserUri = new URI(getUserUrl);
 
         HttpHeaders headers = new HttpHeaders();
@@ -48,7 +47,6 @@ public class UserUtils {
 
         ResponseEntity<UserInfo> response = restTemplate.exchange(getUserUri, HttpMethod.POST, httpEntity, UserInfo.class);
         if (response.getStatusCodeValue() != 200) throw new BadRequestException("Authentication Server couldn't authenticate jwt");
-        logger.info("Got response: " + response.getStatusCodeValue() + ": " + response.getBody().getEmail());
 
         return response.getBody();
     }

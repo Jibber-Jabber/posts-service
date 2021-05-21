@@ -10,7 +10,6 @@ import java.lang.annotation.RetentionPolicy;
 public @interface WithTestUser {
 
     String username() default "test";
-    String password() default "password";
     String userId() default "123";
     String email() default "test@gmail.com";
     String firstName() default "test";
