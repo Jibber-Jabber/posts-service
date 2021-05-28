@@ -53,8 +53,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     private UserInfo sendUserServiceRequest(String jwt) throws URISyntaxException {
         RestTemplate restTemplate = new RestTemplate();
 
-        final String getUserUrl = "http://" + authHost + ":" + authPort + "/api/posts/authenticateUser";
-        logger.info("Authenticating with: http://" + authHost + ":" + authPort + "/api/posts/authenticateUser");
+        final String getUserUrl = "http://" + authHost + ":" + authPort + "/api/users/authenticateUser";
+        logger.info("Authenticating with: http://" + authHost + ":" + authPort + "/api/users/authenticateUser");
 
         URI getUserUri = new URI(getUserUrl);
 

@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,7 +46,7 @@ class PostServiceApplicationTests {
 
 	@Test
 	@WithTestUser
-	void Should_ListPosts() {
+	void Should_ListPosts() throws URISyntaxException {
 		PostCreationDto postCreation1 = PostCreationDto.builder()
 				.content("test content 1")
 				.build();
@@ -57,7 +58,7 @@ class PostServiceApplicationTests {
 		postService.createPost(postCreation1);
 		postService.createPost(postCreation2);
 
-		List<PostInfoDto> posts = postService.getAllPosts();
+		List<PostInfoDto> posts = postService.getHomePosts();
 
 		assertThat(posts.size()).isEqualTo(2);
 		assertThat(posts.get(0).getContent()).isEqualTo("test content 2");

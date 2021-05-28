@@ -5,6 +5,7 @@ import edu.austral.ingsis.jj.postsservice.model.UserInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -15,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 @Component
 public class UserUtils {
@@ -34,18 +36,32 @@ public class UserUtils {
 
     public UserInfo getUserInfoFromId(String userId) throws URISyntaxException {
         RestTemplate restTemplate = new RestTemplate();
-
-
-        final String getUserUrl = "http://" + authHost + ":" + authPort + "/api/posts/userInfo";
-        logger.info("Authenticating with: http://{}:{}/api/posts/userInfo", authHost, authPort);
-        URI getUserUri = new URI(getUserUrl);
+        final String url = "http://" + authHost + ":" + authPort + "/api/users/userInfo";
+        logger.info("Authenticating with: {}", url);
+        URI getUserUri = new URI(url);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Cookie", "jwt="+ SecurityContextHolder.getContext().getAuthentication().getCredentials().toString());
         headers.add("userId", userId);
+        headers.add("Cookie", "jwt="+ SecurityContextHolder.getContext().getAuthentication().getCredentials().toString());
         HttpEntity<String> httpEntity = new HttpEntity<>(headers);
 
         ResponseEntity<UserInfo> response = restTemplate.exchange(getUserUri, HttpMethod.POST, httpEntity, UserInfo.class);
+        if (response.getStatusCodeValue() != 200) throw new BadRequestException("Authentication Server couldn't authenticate jwt");
+
+        return response.getBody();
+    }
+
+    public List<UserInfo> getFollowedUsersById() throws URISyntaxException {
+        RestTemplate restTemplate = new RestTemplate();
+        final String url = "http://" + authHost + ":" + authPort + "/api/users/followedUsers";
+        logger.info("Authenticating with: {}", url);
+        URI getUserUri = new URI(url);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Cookie", "jwt="+ SecurityContextHolder.getContext().getAuthentication().getCredentials().toString());
+        HttpEntity<String> httpEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<List<UserInfo>> response = restTemplate.exchange(getUserUri, HttpMethod.GET, httpEntity, new ParameterizedTypeReference<>() {});
         if (response.getStatusCodeValue() != 200) throw new BadRequestException("Authentication Server couldn't authenticate jwt");
 
         return response.getBody();
