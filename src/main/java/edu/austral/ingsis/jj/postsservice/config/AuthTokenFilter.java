@@ -38,7 +38,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             Optional<Cookie> jwtCookie = Arrays.stream(request.getCookies()).filter(cookie -> cookie.getName().equals("jwt")).findFirst();
             if (jwtCookie.isEmpty()) throw new BadRequestException("jwt not found");
             UserInfo userInfo = sendUserServiceRequest(jwtCookie.get().getValue());
-            List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(userInfo.getRole()));
+            List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
 
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userInfo, jwtCookie.get().getValue(), authorities);
             SecurityContextHolder.getContext().setAuthentication(authentication);

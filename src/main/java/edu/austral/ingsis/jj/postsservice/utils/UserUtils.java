@@ -34,18 +34,22 @@ public class UserUtils {
         return (UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
-    public UserInfo getUserInfoFromId(String userId) throws URISyntaxException {
+    public UserInfo getUserInfoFromId(String userId) {
         RestTemplate restTemplate = new RestTemplate();
-        final String url = "http://" + authHost + ":" + authPort + "/api/users/userInfo";
+        final String url = "http://" + authHost + ":" + authPort + "/api/users/userInfo/" + userId;
         logger.info("Authenticating with: {}", url);
-        URI getUserUri = new URI(url);
+        URI getUserUri = null;
+        try {
+            getUserUri = new URI(url);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("userId", userId);
         headers.add("Cookie", "jwt="+ SecurityContextHolder.getContext().getAuthentication().getCredentials().toString());
         HttpEntity<String> httpEntity = new HttpEntity<>(headers);
 
-        ResponseEntity<UserInfo> response = restTemplate.exchange(getUserUri, HttpMethod.POST, httpEntity, UserInfo.class);
+        ResponseEntity<UserInfo> response = restTemplate.exchange(getUserUri, HttpMethod.GET, httpEntity, UserInfo.class);
         if (response.getStatusCodeValue() != 200) throw new BadRequestException("Authentication Server couldn't authenticate jwt");
 
         return response.getBody();

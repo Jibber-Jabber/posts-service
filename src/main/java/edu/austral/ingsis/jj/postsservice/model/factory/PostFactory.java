@@ -6,6 +6,8 @@ import edu.austral.ingsis.jj.postsservice.model.UserInfo;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 
 @Component
 public class PostFactory {
@@ -15,6 +17,8 @@ public class PostFactory {
         post.setUserId(userInfo.getUserId());
         post.setContent(postCreationDto.getContent());
         post.setCreationDate(LocalDateTime.now());
+        post.setLikes(Collections.emptySet());
+        post.setComments(new ArrayList<>());
         return post;
     }
 }
