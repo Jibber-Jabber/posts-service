@@ -3,14 +3,21 @@ package edu.austral.ingsis.jj.postsservice;
 import edu.austral.ingsis.jj.postsservice.dto.CommentCreationDto;
 import edu.austral.ingsis.jj.postsservice.dto.PostCreationDto;
 import edu.austral.ingsis.jj.postsservice.dto.PostHomeInfoDto;
+import edu.austral.ingsis.jj.postsservice.mocks.UserMocks;
 import edu.austral.ingsis.jj.postsservice.model.Comment;
 import edu.austral.ingsis.jj.postsservice.model.Post;
+import edu.austral.ingsis.jj.postsservice.model.UserInfo;
 import edu.austral.ingsis.jj.postsservice.repository.PostRepository;
 import edu.austral.ingsis.jj.postsservice.service.PostService;
+import edu.austral.ingsis.jj.postsservice.utils.UserUtils;
+import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -19,6 +26,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -31,13 +40,18 @@ class PostServiceApplicationTests {
 	@Autowired
 	private PostRepository postRepository;
 
+	@MockBean
+	UserUtils userUtils;
+
+
 	@Test
 	@WithTestUser(username = "postCreationUser", userId = "1")
 	void Should_CreatePost() {
+		when(userUtils.getTokenUserInformation()).thenReturn((UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+
 		PostCreationDto postCreation = PostCreationDto.builder()
 				.content("test content")
 				.build();
-
 
 		PostHomeInfoDto createdPost = postService.createPost(postCreation);
 
@@ -50,6 +64,8 @@ class PostServiceApplicationTests {
 	@Test
 	@WithTestUser
 	void Should_ListPosts() throws URISyntaxException {
+		when(userUtils.getTokenUserInformation()).thenReturn((UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+
 		PostCreationDto postCreation1 = PostCreationDto.builder()
 				.content("test content 1")
 				.build();
@@ -73,6 +89,8 @@ class PostServiceApplicationTests {
 	@Test
 	@WithTestUser
 	void Should_likeAndUnlikePost() {
+		when(userUtils.getTokenUserInformation()).thenReturn((UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+
 		PostCreationDto postCreation1 = PostCreationDto.builder()
 				.content("test content 1")
 				.build();
@@ -90,6 +108,9 @@ class PostServiceApplicationTests {
 	@Test
 	@WithTestUser
 	void Should_CommentPost() {
+		when(userUtils.getUserInfoFromId(isA(String.class))).thenReturn(UserMocks.getUserInfo());
+		when(userUtils.getTokenUserInformation()).thenReturn((UserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+
 		PostCreationDto postCreation1 = PostCreationDto.builder()
 				.content("test content 1")
 				.build();
