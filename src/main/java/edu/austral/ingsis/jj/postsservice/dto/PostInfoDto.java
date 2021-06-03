@@ -30,7 +30,9 @@ public class PostInfoDto {
 
     private List<CommentInfoDto> comments;
 
-    public static PostInfoDto from(Post post, UserInfo userInfo, List<CommentInfoDto> comments) {
+    private Boolean likedByUser;
+
+    public static PostInfoDto from(Post post, UserInfo userInfo, List<CommentInfoDto> comments, boolean likedByUser) {
         return PostInfoDto.builder()
                 .content(post.getContent())
                 .postId(post.getId())
@@ -38,6 +40,7 @@ public class PostInfoDto {
                 .creationDate(post.getCreationDate())
                 .likeCount(post.getLikes().size())
                 .comments(comments)
+                .likedByUser(likedByUser)
                 .build();
     }
 }

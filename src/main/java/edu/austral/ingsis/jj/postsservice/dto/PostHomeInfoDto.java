@@ -29,7 +29,9 @@ public class PostHomeInfoDto {
 
     private int commentCount;
 
-    public static PostHomeInfoDto from(Post post, UserInfo userInfo) {
+    private Boolean likedByUser;
+
+    public static PostHomeInfoDto from(Post post, UserInfo userInfo, boolean likedByUser) {
         return PostHomeInfoDto.builder()
                 .content(post.getContent())
                 .postId(post.getId())
@@ -37,6 +39,7 @@ public class PostHomeInfoDto {
                 .creationDate(post.getCreationDate())
                 .likeCount(post.getLikes().size())
                 .commentCount(post.getComments().size())
+                .likedByUser(likedByUser)
                 .build();
     }
 }

@@ -36,7 +36,7 @@ public class PostService {
     public PostHomeInfoDto createPost(PostCreationDto postCreationDto) {
         UserInfo userInfo = userUtils.getTokenUserInformation();
         Post savedPost = postRepository.save(postFactory.convert(postCreationDto, userInfo));
-        return PostHomeInfoDto.from(savedPost, userInfo);
+        return PostHomeInfoDto.from(savedPost, userInfo, false);
     }
 
     public void deletePost(String postId) {
@@ -48,10 +48,11 @@ public class PostService {
 
     public List<PostHomeInfoDto> getHomePosts() throws URISyntaxException {
         UserInfo user = userUtils.getTokenUserInformation();
-        List<PostHomeInfoDto> ownPosts = postRepository.getAllByUserIdOrderByCreationDate(user.getUserId()).stream().map(post -> PostHomeInfoDto.from(post, user)).collect(Collectors.toList());
+        List<PostHomeInfoDto> ownPosts = postRepository.getAllByUserIdOrderByCreationDate(user.getUserId()).stream().map(post ->
+                    PostHomeInfoDto.from(post, user, post.getLikes().contains(user.getUserId()))).collect(Collectors.toList());
         List<UserInfo> followedUsers = userUtils.getFollowedUsersById();
         return Stream.concat(followedUsers.stream().flatMap(userInfo ->
-                postRepository.getAllByUserIdOrderByCreationDate(userInfo.getUserId()).stream().map(post -> PostHomeInfoDto.from(post, userInfo))
+                postRepository.getAllByUserIdOrderByCreationDate(userInfo.getUserId()).stream().map(post -> PostHomeInfoDto.from(post, userInfo, post.getLikes().contains(user.getUserId())))
         ), ownPosts.stream()).sorted(Comparator.comparing(PostHomeInfoDto::getCreationDate).reversed()).collect(Collectors.toList());
     }
 
@@ -69,16 +70,17 @@ public class PostService {
         List<CommentInfoDto> commentDtos = post.getComments().stream().map(commentDto ->
                 CommentInfoDto.from(commentDto, userUtils.getUserInfoFromId(commentDto.getUserId()))
         ).collect(Collectors.toList());
-        return PostInfoDto.from(postRepository.save(post), userUtils.getUserInfoFromId(post.getUserId()), commentDtos);
+        return PostInfoDto.from(postRepository.save(post), userUtils.getUserInfoFromId(post.getUserId()), commentDtos, post.getLikes().contains(user.getUserId()));
     }
 
     public PostInfoDto getPost(String postId) {
+        UserInfo user = userUtils.getTokenUserInformation();
         Post post = postRepository.findById(postId).orElseThrow(() -> new NotFoundException("Post not found!"));
 
         List<CommentInfoDto> comments = post.getComments().stream().map(comment ->
             CommentInfoDto.from(comment, userUtils.getUserInfoFromId(comment.getUserId()))
         ).collect(Collectors.toList());
-        return PostInfoDto.from(post, userUtils.getUserInfoFromId(post.getUserId()), comments);
+        return PostInfoDto.from(post, userUtils.getUserInfoFromId(post.getUserId()), comments, post.getLikes().contains(user.getUserId()));
     }
 
     public void likePost(String postId){
@@ -96,7 +98,8 @@ public class PostService {
     }
 
     public List<PostHomeInfoDto> getUserPosts(String userId) {
+        UserInfo user = userUtils.getTokenUserInformation();
         List<Post> posts = postRepository.getAllByUserIdOrderByCreationDate(userId);
-        return posts.stream().map(post -> PostHomeInfoDto.from(post, userUtils.getUserInfoFromId(userId))).collect(Collectors.toList());
+        return posts.stream().map(post -> PostHomeInfoDto.from(post, userUtils.getUserInfoFromId(userId), post.getLikes().contains(user.getUserId()))).collect(Collectors.toList());
     }
 }
