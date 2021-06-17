@@ -28,7 +28,7 @@ jobs:
           username: ${{ secrets.VM_USERNAME }}
           host: ${{ secrets.VM_PUBLIC_IP }}
           key: ${{ secrets.VM_SSH_PRIVATE_KEY }}
-          envs: REPO_OWNER
+          envs: REPO_OWNER, GITHUB_TOKEN
           script: |
             cd infrastructure
             sudo docker container kill $(sudo docker ps -q)
