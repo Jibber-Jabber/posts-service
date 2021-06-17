@@ -16,7 +16,6 @@ env:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   azure-deploy:
-    needs: build_and_push_to_registry
     name: Deploy to Azure VM
     runs-on: ubuntu-latest
     steps:
