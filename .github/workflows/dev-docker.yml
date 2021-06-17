@@ -48,11 +48,14 @@ jobs:
         env:
           REPO_OWNER: ${{ secrets.REPOSITORY_OWNER }}
           GITHUB_TOKEN: ${{ secrets.VM_GITHUB_TOKEN }}
+          POSTGRES_PASSWORD: ${{ secrets.VM_POSTGRES_PASSWORD }}
+          JJ_SECRET: ${{ secrets.VM_JJ_SECRET }}
+          JJ_EXPIRATION: ${{ secrets.VM_JJ_EXPIRATION }}
         with:
           username: ${{ secrets.VM_USERNAME }}
           host: ${{ secrets.VM_PUBLIC_IP }}
           key: ${{ secrets.VM_SSH_PRIVATE_KEY }}
-          envs: REPO_OWNER, GITHUB_TOKEN
+          envs: REPO_OWNER, GITHUB_TOKEN, POSTGRES_PASSWORD, JJ_SECRET, JJ_EXPIRATION
           script: |
             cd infrastructure
             sudo docker container kill $(sudo docker ps -q)

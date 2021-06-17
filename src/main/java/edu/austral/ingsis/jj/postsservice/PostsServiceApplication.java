@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class PostsServiceApplication {
 
 	public static void main(String[] args) {
-		System.out.println("Cambioooo");
+		System.out.println("Otro cambioo");
 		SpringApplication.run(PostsServiceApplication.class, args);
 	}
 
