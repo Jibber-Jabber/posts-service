@@ -50,8 +50,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.VM_GITHUB_TOKEN }}
         with:
           username: ${{ secrets.VM_USERNAME }}
-          host: ${{ secrets.VM_PUBLIC_IP }}
-          key: ${{ secrets.VM_SSH_PRIVATE_KEY }}
+          host: ${{ secrets.VM_PUBLIC_IP_DEV }}
+          key: ${{ secrets.VM_SSH_PRIVATE_KEY_DEV }}
           envs: REPO_OWNER, GITHUB_TOKEN
           script: |
             cd infrastructure
