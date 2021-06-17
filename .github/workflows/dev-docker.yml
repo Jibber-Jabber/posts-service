@@ -4,7 +4,7 @@ name: CI
 on:
   # Triggers the workflow on push events but only for the main branch
   push:
-    branches: [development]
+    branches: [development, feature/azure-deploy-automation]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -37,3 +37,18 @@ jobs:
           file: ./Dockerfile.multi
           push: true
           tags: docker.pkg.github.com/${{ env.REPO }}/${{ env.IMAGE_NAME }}:latest
+
+  azure-deploy:
+    needs: build_and_push_to_registry
+    name: Deploy to Azure VM
+    runs-on: ubuntu-latest
+    steps:
+      - name: Connecting with SSH to Azure VM
+      - uses: appleboy/ssh-action@master
+        with:
+          username: ${{ secrets.VM_USERNAME }}
+          host: ${{ secrets.VM_PUBLIC_IP }}
+          key: ${{ secrets.VM_SSH_PRIVATE_KEY }}
+
+      - run: |
+          ls -a
