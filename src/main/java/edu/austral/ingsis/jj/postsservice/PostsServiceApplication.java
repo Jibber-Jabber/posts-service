@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class PostsServiceApplication {
 
 	public static void main(String[] args) {
-		System.out.println("Otro ddd");
+		System.out.println("Otro 1234");
 		SpringApplication.run(PostsServiceApplication.class, args);
 	}
 
