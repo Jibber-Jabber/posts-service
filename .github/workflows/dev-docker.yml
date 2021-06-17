@@ -44,7 +44,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Connecting with SSH to Azure VM
-      - uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@master
         with:
           username: ${{ secrets.VM_USERNAME }}
           host: ${{ secrets.VM_PUBLIC_IP }}
