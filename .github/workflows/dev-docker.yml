@@ -49,4 +49,6 @@ jobs:
           username: ${{ secrets.VM_USERNAME }}
           host: ${{ secrets.VM_PUBLIC_IP }}
           key: ${{ secrets.VM_SSH_PRIVATE_KEY }}
-          script: whoami
+          script: |
+            cd infrastructure
+            touch test-file
