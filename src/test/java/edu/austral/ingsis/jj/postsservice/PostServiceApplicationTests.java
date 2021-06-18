@@ -10,8 +10,6 @@ import edu.austral.ingsis.jj.postsservice.model.UserInfo;
 import edu.austral.ingsis.jj.postsservice.repository.PostRepository;
 import edu.austral.ingsis.jj.postsservice.service.PostService;
 import edu.austral.ingsis.jj.postsservice.utils.UserUtils;
-import org.junit.Before;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,10 +96,12 @@ class PostServiceApplicationTests {
 
 		postService.likePost(postDto.getPostId());
 		Optional<Post> post = postRepository.findById(postDto.getPostId());
+		assertThat(post).isPresent();
 		assertThat(post.get().getLikes()).containsOnly("123"); // "test" userId
 
 		postService.unlikePost(postDto.getPostId());
 		post = postRepository.findById(postDto.getPostId());
+		assertThat(post).isPresent();
 		assertThat(post.get().getLikes()).isEmpty();
 	}
 
@@ -122,6 +122,7 @@ class PostServiceApplicationTests {
 
 		postService.addComment(postDto.getPostId(), commentCreationDto);
 		Optional<Post> post = postRepository.findById(postDto.getPostId());
+		assertThat(post).isPresent();
 		Comment comment = post.get().getComments().get(0);
 		assertThat(comment.getContent()).isEqualTo("test comment");
 		assertThat(comment.getUserId()).isEqualTo("123");
